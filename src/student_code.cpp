@@ -238,7 +238,7 @@ namespace CGL
     // TODO Part 5.
     // This method should split the given edge and return an iterator to the newly inserted vertex.
     // The halfedge of this vertex should point along the edge that was split, rather than the new edges.
-    if (e0->isBoundary()) {
+      if (e0->isBoundary()) {
         return {};
     }
 
@@ -254,34 +254,35 @@ namespace CGL
       HalfedgeIter h8 = h4->twin();
       HalfedgeIter h9 = h5->twin();
       // add new half-edges
-      HalfedgeIter h10 = {};
-      HalfedgeIter h11 = {};
-      HalfedgeIter h12 = {};
-      HalfedgeIter h13 = {};
-      HalfedgeIter h14 = {};
-      HalfedgeIter h15 = {};
+      HalfedgeIter h10 = newHalfedge();
+      HalfedgeIter h11 = newHalfedge();
+      HalfedgeIter h12 = newHalfedge();
+      HalfedgeIter h13 = newHalfedge();
+      HalfedgeIter h14 = newHalfedge();
+      HalfedgeIter h15 = newHalfedge();
       // collect vertices
       VertexIter v0 = h0->vertex();
       VertexIter v1 = h3->vertex();
       VertexIter v2 = h6->vertex();
       VertexIter v3 = h8->vertex();
       // add new vertices
-      VertexIter vm = {};
+      VertexIter vm = newVertex();
+      vm->position = (v1->position + v0->position) / 2;
       //collect edges
       EdgeIter e1 = h1->edge();
       EdgeIter e2 = h2->edge();
       EdgeIter e3 = h4->edge();
       EdgeIter e4 = h5->edge();
       // add new edges
-      EdgeIter e5 = {};
-      EdgeIter e6 = {};
-      EdgeIter e7 = {};
+      EdgeIter e5 = newEdge();
+      EdgeIter e6 = newEdge();
+      EdgeIter e7 = newEdge();
       //collect faces
       FaceIter f0 = h0->face();
       FaceIter f1 = h3->face();
       // add new faces
-      FaceIter f2 = {};
-      FaceIter f3 = {};
+      FaceIter f2 = newFace();
+      FaceIter f3 = newFace();
 
       // reassign half-edge
       h0->next() = h1;
@@ -307,7 +308,6 @@ namespace CGL
       h3->vertex() = v1;
       h3->edge() = e0;
       h3->face() = f1;
-
 
       h4->next() = h5;
       h4->twin() = h15;
@@ -344,7 +344,6 @@ namespace CGL
       h9->vertex() = v1;
       h9->edge() = e4;
       h9->face() = h9->face();
-
       h10->next() = h11;
       h10->twin() = h13;
       h10->vertex() = v0;
