@@ -273,7 +273,9 @@ namespace CGL
       EdgeIter e3 = h4->edge();
       EdgeIter e4 = h5->edge();
       // add new edges
-      EdgeIter en = {};
+      EdgeIter e5 = {};
+      EdgeIter e6 = {};
+      EdgeIter e7 = {};
       //collect faces
       FaceIter f0 = h0->face();
       FaceIter f1 = h3->face();
@@ -288,121 +290,119 @@ namespace CGL
       h0->edge() = e0;
       h0->face() = f0;
 
-      h1->next() =
-      h1->twin() =
-      h1->vertex() =
-      h1->edge() =
-      h1->face() =
+      h1->next() = h2;
+      h1->twin() = h6;
+      h1->vertex() = v1;
+      h1->edge() = e1;
+      h1->face() = f0;
 
-      h2->next() =
-      h2->twin() =
-      h2->vertex() =
-      h2->edge() =
-      h2->face() =
+      h2->next() = h0;
+      h2->twin() = h11;
+      h2->vertex() = v2;
+      h2->edge() = e6;
+      h2->face() = f0;
 
-      h3->next() =
-      h3->twin() =
-      h3->vertex() =
-      h3->edge() =
-      h3->face() =
-
-
-      h4->next() =
-      h4->twin() =
-      h4->vertex() =
-      h4->edge() =
-      h4->face() =
-
-      h5->next() =
-      h5->twin() =
-      h5->vertex() =
-      h5->edge() =
-      h5->face() =
+      h3->next() = h4;
+      h3->twin() = h0;
+      h3->vertex() = v1;
+      h3->edge() = e0;
+      h3->face() = f1;
 
 
-      h6->next() =
-      h6->twin() =
-      h6->vertex() =
-      h6->edge() =
-      h6->face() =
+      h4->next() = h5;
+      h4->twin() = h15;
+      h4->vertex() = vm;
+      h4->edge() = e5;
+      h4->face() = f1;
 
+      h5->next() = h3;
+      h5->twin() = h9;
+      h5->vertex() = v3;
+      h5->edge() = e4;
+      h5->face() = f1;
 
-      h7->next() =
-      h7->twin() =
-      h7->vertex() =
-      h7->edge() =
-      h7->face() =
+      h6->next() = h6->next();
+      h6->twin() = h1;
+      h6->vertex() = v2;
+      h6->edge() = e1;
+      h6->face() = h6->face();
 
+      h7->next() = h7->next();
+      h7->twin() = h12;
+      h7->vertex() = v0;
+      h7->edge() = e2;
+      h7->face() = h7->face();
 
-      h8->next() =
-      h8->twin() =
-      h8->vertex() =
-      h8->edge() =
-      h8->face() =
+      h8->next() = h8->next();
+      h8->twin() = h14;
+      h8->vertex() = v3;
+      h8->edge() = e3;
+      h8->face() = h8->face();
 
+      h9->next() = h9->next();
+      h9->twin() = h5;
+      h9->vertex() = v1;
+      h9->edge() = e4;
+      h9->face() = h9->face();
 
-      h9->next() =
-      h9->twin() =
-      h9->vertex() =
-      h9->edge() =
-      h9->face() =
+      h10->next() = h11;
+      h10->twin() = h13;
+      h10->vertex() = v0;
+      h10->edge() = e7;
+      h10->face() = f3;
 
-      h10->next() =
-      h10->twin() =
-      h10->vertex() =
-      h10->edge() =
-      h10->face() =
+      h11->next() = h12;
+      h11->twin() = h2;
+      h11->vertex() = vm;
+      h11->edge() = e6;
+      h11->face() = f3;
 
-      h11->next() =
-      h11->twin() =
-      h11->vertex() =
-      h11->edge() =
-      h11->face() =
+      h12->next() = h10;
+      h12->twin() = h7;
+      h12->vertex() = v2;
+      h12->edge() = e2;
+      h12->face() = f3;
 
-      h12->next() =
-      h12->twin() =
-      h12->vertex() =
-      h12->edge() =
-      h12->face() =
+      h13->next() = h14;
+      h13->twin() = h10;
+      h13->vertex() = vm;
+      h13->edge() = e7;
+      h13->face() = f2;
 
-      h13->next() =
-      h13->twin() =
-      h13->vertex() =
-      h13->edge() =
-      h13->face() =
+      h14->next() = h15;
+      h14->twin() = h8;
+      h14->vertex() = v0;
+      h14->edge() = e3;
+      h14->face() = f2;
 
-      h14->next() =
-      h14->twin() =
-      h14->vertex() =
-      h14->edge() =
-      h14->face() =
-
-      h15->next() =
-      h15->twin() =
-      h15->vertex() =
-      h15->edge() =
-      h15->face() =
+      h15->next() = h13;
+      h15->twin() = h4;
+      h15->vertex() = v3;
+      h15->edge() = e5;
+      h15->face() = f2;
 
       // reassign vertices
-      v0->halfedge() =
-      v1->halfedge() =
-      v2->halfedge() =
-      v3->halfedge() =
-      vm->halfedge() =
+      v0->halfedge() = h14;
+      v1->halfedge() = h1;
+      v2->halfedge() = h12;
+      v3->halfedge() = h5;
+      vm->halfedge() = h0;
 
       // reassign edges
-      e0->halfedge() =
-      e1->halfedge() =
-      e2->halfedge() =
-      e3->halfedge() =
-      e4->halfedge() =
-      en->halfedge() =
+      e0->halfedge() = h0;
+      e1->halfedge() = h1;
+      e2->halfedge() = h12;
+      e3->halfedge() = h14;
+      e4->halfedge() = h5;
+      e5->halfedge() = h15;
+      e6->halfedge() = h11;
+      e7->halfedge() = h10;
 
       // reassign faces
-      f0->halfedge() =
-      f1->halfedge() =
-      f2->halfedge() =
-      f3->halfedge() =
+      f0->halfedge() = h1;
+      f1->halfedge() = h5;
+      f2->halfedge() = h14;
+      f3->halfedge() = h11;
 
     return vm;
   }
