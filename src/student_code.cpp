@@ -239,7 +239,7 @@ namespace CGL
     // This method should split the given edge and return an iterator to the newly inserted vertex.
     // The halfedge of this vertex should point along the edge that was split, rather than the new edges.
       if (e0->isBoundary()) {
-        return {};
+        return VertexIter();
     }
 
       // collect half-edges
@@ -417,14 +417,51 @@ namespace CGL
     // 1. Compute new positions for all the vertices in the input mesh, using the Loop subdivision rule,
     // and store them in Vertex::newPosition. At this point, we also want to mark each vertex as being
     // a vertex of the original mesh.
+
+      for (VertexIter v = mesh.verticesBegin(); v != mesh.verticesEnd(); v++ ) {
+                 // calculate
+                 float u = v->degree() == 3 ? 3/16 : 3/(8 * v->degree());
+
+                 Vector3D original_neighbor_position_sum = Vector3D();
+                 auto h = v->halfedge();
+                 do {
+                     VertexIter neighbor_vertex = h->twin()->vertex();
+                     original_neighbor_position_sum += neighbor_vertex->position;
+                     h = h->twin()->next();
+                 } while (h!= v->halfedge());
+
+                 v->newPosition = (1- v->degree() * u) * v->position + u * original_neighbor_position_sum;
+                 v->isNew = false;
+      }
     
     // 2. Compute the updated vertex positions associated with edges, and store it in Edge::newPosition.
-    
+
+    for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
+        if (e->isBoundary()) {
+            continue;
+        }
+        Vector3D A = e->halfedge()->vertex()->position;
+        Vector3D B = e->halfedge()->twin()->vertex()->position;
+        Vector3D D = e->halfedge()->next()->next()->vertex()->position;
+        Vector3D C = e->halfedge()->twin()->next()->next()->vertex()->position;
+
+        e->newPosition = 3/8 * (A + B) + 1/8 * (C+D);
+        e->isNew = false;
+    }
+
     // 3. Split every edge in the mesh, in any order. For future reference, we're also going to store some
     // information about which subdivide edges come from splitting an edge in the original mesh, and which edges
     // are new, by setting the flat Edge::isNew. Note that in this loop, we only want to iterate over edges of
     // the original mesh---otherwise, we'll end up splitting edges that we just split (and the loop will never end!)
-    
+
+      for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
+          if (e->isBoundary() || e->isNew) {
+              continue;
+          }
+          mesh.splitEdge(e);
+
+      }
+
     // 4. Flip any new edge that connects an old and new vertex.
 
     // 5. Copy the new vertex positions into final Vertex::position.
