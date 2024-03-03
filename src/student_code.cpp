@@ -420,7 +420,7 @@ namespace CGL
 
       for (VertexIter v = mesh.verticesBegin(); v != mesh.verticesEnd(); v++ ) {
                  // calculate
-                 float u = v->degree() == 3 ? 3/16 : 3/(8 * v->degree());
+                 float u = v->degree() == 3 ? 0.375 : 3.0 / (8 * v->degree());
 
                  Vector3D original_neighbor_position_sum = Vector3D();
                  auto h = v->halfedge();
@@ -445,7 +445,7 @@ namespace CGL
         Vector3D D = e->halfedge()->next()->next()->vertex()->position;
         Vector3D C = e->halfedge()->twin()->next()->next()->vertex()->position;
 
-        e->newPosition = 3/8 * (A + B) + 1/8 * (C+D);
+        e->newPosition = 0.375 * (A + B) + .125 * (C+D);
         e->isNew = false;
     }
 
@@ -458,13 +458,33 @@ namespace CGL
           if (e->isBoundary() || e->isNew) {
               continue;
           }
-          mesh.splitEdge(e);
-
+          VertexIter vn = mesh.splitEdge(e);
+          vn->newPosition = e->newPosition;
+          vn->halfedge()->edge()->isNew = true;
+          vn->halfedge()->twin()->next()->edge()->isNew = true;
+          vn->halfedge()->next()->next()->edge()->isNew = true;
+          vn->halfedge()->twin()->next()->twin()->next()->edge()->isNew = true;
       }
 
     // 4. Flip any new edge that connects an old and new vertex.
+      for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
+          if (e->isBoundary()) {
+              continue;
+          }
+          HalfedgeIter h = e->halfedge();
+          VertexIter v1 = h->vertex();
+          VertexIter v2 = h->twin()->vertex();
+
+          if (v1->isNew != v2->isNew) {
+              mesh.flipEdge(e);
+          }
+      }
+
 
     // 5. Copy the new vertex positions into final Vertex::position.
+      for (VertexIter v = mesh.verticesBegin(); v != mesh.verticesEnd(); v++ ) {
+          v->position = v->newPosition;
+      }
 
   }
 }
