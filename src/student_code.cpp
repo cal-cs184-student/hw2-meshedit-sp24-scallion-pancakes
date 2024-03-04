@@ -224,7 +224,7 @@ namespace CGL
       e1->halfedge() = h5;
       e2->halfedge() = h1;
       e3->halfedge() = h2;
-      e4->halfedge() = h5;
+      e4->halfedge() = h4;
 
       // reassign faces
       f0->halfedge() = h0;
@@ -344,6 +344,7 @@ namespace CGL
       h9->vertex() = v1;
       h9->edge() = e4;
       h9->face() = h9->face();
+
       h10->next() = h11;
       h10->twin() = h13;
       h10->vertex() = v0;
