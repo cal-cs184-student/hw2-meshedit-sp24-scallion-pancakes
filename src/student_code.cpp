@@ -103,15 +103,14 @@ namespace CGL
 
 
     do {
-        auto hedge2 = hedge->next()->next(); // on the same face as hedge
+            auto hedge2 = hedge->next()->next(); // on the same face as hedge
 
-        Vector3D v_out = this->position - hedge->next()->vertex()->position;
-        Vector3D v_in = hedge2->vertex()->position - this->position;
+            Vector3D v_out = this->position - hedge->next()->vertex()->position;
+            Vector3D v_in = hedge2->vertex()->position - this->position;
 
-        Vector3D normal = cross(v_in, v_out);
+            Vector3D normal = cross(v_in, v_out);
 
-        normal_sum = normal_sum + normal;
-
+            normal_sum = normal_sum + normal;
         hedge = hedge->twin()->next();
     } while(hedge != this->halfedge());
 
@@ -438,9 +437,9 @@ namespace CGL
     // 2. Compute the updated vertex positions associated with edges, and store it in Edge::newPosition.
 
     for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
-        if (e->isBoundary()) {
-            continue;
-        }
+//        if (e->isBoundary()) {
+//            continue;
+//        }
         Vector3D A = e->halfedge()->vertex()->position;
         Vector3D B = e->halfedge()->twin()->vertex()->position;
         Vector3D D = e->halfedge()->next()->next()->vertex()->position;
@@ -459,6 +458,9 @@ namespace CGL
           if (e->isBoundary() || e->isNew) {
               continue;
           }
+//          if (e->isNew) {
+//              continue;
+//          }
           VertexIter vn = mesh.splitEdge(e);
           vn->isNew = true;
 
@@ -483,7 +485,10 @@ namespace CGL
 
     // 4. Flip any new edge that connects an old and new vertex.
       for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
-          if (e->isBoundary() || !(e->isBlue)) {
+//          if (e->isBoundary() || !(e->isBlue)) {
+//              continue;
+//          }
+          if (!(e->isBlue)) {
               continue;
           }
           HalfedgeIter h = e->halfedge();
