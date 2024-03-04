@@ -221,9 +221,9 @@ namespace CGL
 
       // reassign edges
       e0->halfedge() = h0;
-      e1->halfedge() = h1;
-      e2->halfedge() = h2;
-      e3->halfedge() = h4;
+      e1->halfedge() = h5;
+      e2->halfedge() = h1;
+      e3->halfedge() = h2;
       e4->halfedge() = h5;
 
       // reassign faces
@@ -420,7 +420,7 @@ namespace CGL
 
       for (VertexIter v = mesh.verticesBegin(); v != mesh.verticesEnd(); v++ ) {
                  // calculate
-                 float u = v->degree() == 3 ? 0.375 : 3.0 / (8 * v->degree());
+                 float u = v->degree() == 3 ? 0.1875 : 3.0 / (8.0 * v->degree());
 
                  Vector3D original_neighbor_position_sum = Vector3D();
                  auto h = v->halfedge();
@@ -445,7 +445,7 @@ namespace CGL
         Vector3D D = e->halfedge()->next()->next()->vertex()->position;
         Vector3D C = e->halfedge()->twin()->next()->next()->vertex()->position;
 
-        e->newPosition = 0.375 * (A + B) + .125 * (C+D);
+        e->newPosition = 0.375 * (A + B) + 0.125 * (C+D);
         e->isNew = false;
     }
 
@@ -459,23 +459,39 @@ namespace CGL
               continue;
           }
           VertexIter vn = mesh.splitEdge(e);
+          vn->isNew = true;
+
           vn->newPosition = e->newPosition;
-          vn->halfedge()->edge()->isNew = true;
+          vn->halfedge()->edge()->isNew = true; // along 'old' edge
+          vn->halfedge()->edge()->isBlue = false; // along 'old' edge
+          vn->halfedge()->twin()->next()->twin()->next()->edge()->isNew = true; // along 'old' edge
+          vn->halfedge()->twin()->next()->twin()->next()->edge()->isBlue = false; // along 'old' edge
+
+
           vn->halfedge()->twin()->next()->edge()->isNew = true;
+          vn->halfedge()->twin()->next()->edge()->isBlue = true;
           vn->halfedge()->next()->next()->edge()->isNew = true;
-          vn->halfedge()->twin()->next()->twin()->next()->edge()->isNew = true;
+          vn->halfedge()->next()->next()->edge()->isBlue = true;
       }
+
+
+      // testing
+//      for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
+//          cout << e->isBlue << " " << e->halfedge()->vertex()->isNew << e->halfedge()->twin()->vertex()->isNew << endl;
+//      }
 
     // 4. Flip any new edge that connects an old and new vertex.
       for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++) {
-          if (e->isBoundary()) {
+          if (e->isBoundary() || !(e->isBlue)) {
               continue;
           }
           HalfedgeIter h = e->halfedge();
           VertexIter v1 = h->vertex();
           VertexIter v2 = h->twin()->vertex();
-
+          //cout << "WOW" << endl;
+          //cout << v1->isNew << v2->isNew << endl;
           if (v1->isNew != v2->isNew) {
+              //cout << "poggers" << endl;
               mesh.flipEdge(e);
           }
       }
